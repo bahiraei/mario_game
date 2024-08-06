@@ -1,0 +1,102 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level_2.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "level_1 - Copy.tmx": {
+            "scale": 0.34691964285714283,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 560.6485651782269,
+                "y": 184.48076180671728
+            }
+        },
+        "level_1.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 600,
+                "y": 183
+            }
+        },
+        "level_2.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 481,
+                "y": 94
+            }
+        },
+        "level_3.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 543,
+                "y": 154
+            }
+        },
+        "level_4.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.75,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 248.66666666666666,
+                "y": 130.66666666666666
+            }
+        },
+        "mariogame_tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "untitled.tmx": {
+            "scale": 1.318125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 306.49596965386434,
+                "y": 174.49027975343765
+            }
+        }
+    },
+    "last.imagePath": "C:/Users/Faradars/StudioProjects/mario_game/assets/images",
+    "map.fixedSize": true,
+    "map.height": 23,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 70,
+    "openFiles": [
+        "level_1.tmx",
+        "level_2.tmx"
+    ],
+    "project": "mario_game.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "level_2.tmx",
+        "level_3.tmx",
+        "level_1.tmx",
+        "mariogame_tileset.tsx",
+        "level_1 - Copy.tmx",
+        "level_4.tmx",
+        "untitled.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 7,
+    "tileset.spacing": 1,
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

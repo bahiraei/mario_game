@@ -1,0 +1,46 @@
+name: mario_game
+description: "A new Flutter project."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flame: ^1.18.0
+  flame_tiled: ^1.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/audio/
+    - assets/images/
+    - assets/tiles/
+
+#  fonts:
+#    - family: IranSans
+#      fonts:
+#        - asset: assets/fonts/iransans/regular.ttf
+#          weight: 400
+#        - asset: assets/fonts/iransans/black.ttf
+#          weight: 900
+#        - asset: assets/fonts/iransans/light.ttf
+#          weight: 300
+#        - asset: assets/fonts/iransans/ultraLight.ttf
+#          weight: 200
+#        - asset: assets/fonts/iransans/bold.ttf
+#          weight: 700
+#        - asset: assets/fonts/iransans/medium.ttf
+#          weight: 500
