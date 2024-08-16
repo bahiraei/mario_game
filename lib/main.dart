@@ -7,12 +7,12 @@ import 'maro_game.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final game = MaroGame();
+  final game = MarioGame();
   Flame.device.fullScreen();
   Flame.device.setLandscape();
   runApp(
     GameWidget(
-      game: kDebugMode ? MaroGame() : game,
+      game: kDebugMode ? MarioGame() : game,
     ),
   );
 }
