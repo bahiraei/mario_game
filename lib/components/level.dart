@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:mario_game/components/impediment_block.dart';
+import 'package:mario_game/components/trap.dart';
 
 import 'collected_item.dart';
 import 'invisible_object.dart';
@@ -42,18 +44,45 @@ class Level extends World {
     final impedimentsLayer =
         level.tileMap.getLayer<ObjectGroup>('ImpedimentsLayer')!;
     for (final impediment in impedimentsLayer.objects) {
-      final bloc = ImpedimentBlock(
-        size: Vector2(
-          impediment.size.x,
-          impediment.size.y,
-        ),
-        position: Vector2(
-          impediment.position.x,
-          impediment.position.y,
-        ),
-      );
-      add(bloc);
-      impedimentBlocksList.add(bloc);
+      switch (impediment.class_) {
+        case 'trap':
+          final leftMargin = impediment.name == 'fire'
+              ? impediment.properties.getValue('leftMargin')
+              : 0;
+
+          final rightMargin = impediment.name == 'fire'
+              ? impediment.properties.getValue('rightMargin')
+              : 0;
+          add(
+            Trap(
+              name: impediment.name,
+              leftMargin: leftMargin,
+              rightMargin: rightMargin,
+              position: Vector2(
+                impediment.x,
+                impediment.y,
+              ),
+              size: Vector2(
+                impediment.width,
+                impediment.height,
+              ),
+            ),
+          );
+
+        default:
+          final bloc = ImpedimentBlock(
+            size: Vector2(
+              impediment.size.x,
+              impediment.size.y,
+            ),
+            position: Vector2(
+              impediment.position.x,
+              impediment.position.y,
+            ),
+          );
+          add(bloc);
+          impedimentBlocksList.add(bloc);
+      }
     }
 
     player.impedimentBlocksList = impedimentBlocksList;

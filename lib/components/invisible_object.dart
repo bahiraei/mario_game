@@ -28,9 +28,10 @@ class InvisibleObject extends SpriteAnimationGroupComponent
       game.cam.stop();
     }
 
-    /*if (game.player.position.x == game.player.firstPosition.x) {
+    if (game.player.position.x == game.player.firstPosition.x) {
       position = firstPosition;
-    }*/
+    }
+
     position.x += game.player.velocity.x * dt;
   }
 }

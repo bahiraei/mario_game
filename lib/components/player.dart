@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:mario_game/components/player_hitbox.dart';
+import 'package:mario_game/components/trap.dart';
 import 'package:mario_game/maro_game.dart';
 
 import 'collected_item.dart';
@@ -13,6 +14,8 @@ enum PlayerState {
   walk,
   jump,
   idle,
+  die,
+  appear,
 }
 
 //with HasGameRef<MaroGame> => یک نمونه از کلاس مربوطه رو برای ما ایجاد می کند
@@ -21,6 +24,8 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation walkingAnimation;
   late final SpriteAnimation idleAnimation;
   late final SpriteAnimation jumpAnimation;
+  late final SpriteAnimation dieAnimation;
+  late final SpriteAnimation appearAnimation;
 
   double moveSpeed = 100;
   int moveDirection = 0;
@@ -28,7 +33,8 @@ class Player extends SpriteAnimationGroupComponent
   bool isFacingRight = true;
   bool isPlayerJumped = false;
   bool isPlayerOnGround = false;
-
+  Vector2 firstPosition = Vector2.zero();
+  bool isDie = false;
   List<ImpedimentBlock> impedimentBlocksList = [];
   PlayerHitBox hitBox = PlayerHitBox(
     width: 23,
@@ -46,6 +52,7 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   FutureOr<void> onLoad() {
+    firstPosition = Vector2(position.x, position.y);
     add(
       RectangleHitbox(
         position: Vector2(hitBox.offsetX, hitBox.offsetY),
@@ -58,11 +65,14 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    _updatePlayerState();
-    _updatePlayerMoves(dt);
-    _checkHorizontalCollision();
-    _addGravity(dt);
-    _checkVerticalCollision();
+    if (!isDie) {
+      _updatePlayerState();
+      _updatePlayerMoves(dt);
+      _checkHorizontalCollision();
+      _addGravity(dt);
+      _checkVerticalCollision();
+    }
+
     super.update(dt);
   }
 
@@ -86,11 +96,25 @@ class Player extends SpriteAnimationGroupComponent
       stepTime: .5,
     );
 
+    appearAnimation = _spriteAnimation(
+      state: 'appear',
+      amount: 9,
+      stepTime: .1,
+    );
+
+    dieAnimation = _spriteAnimation(
+      state: 'die',
+      amount: 1,
+      stepTime: .1,
+    );
+
     //معرفی انیمیشن ها به کلاس مربوطه
     animations = {
       PlayerState.walk: walkingAnimation,
       PlayerState.idle: idleAnimation,
       PlayerState.jump: jumpAnimation,
+      PlayerState.appear: appearAnimation,
+      PlayerState.die: dieAnimation,
     };
 
     //تنظیم وضعیت فعلی کاراکتر که در چه حالتی شروع به کار کند. اگر قرار نگیرد کاراکتر در صفحه نمایش داده نمی شود.
@@ -236,6 +260,39 @@ class Player extends SpriteAnimationGroupComponent
       other.collisionWithPlayer();
     }
 
+    if (other is Trap) {
+      _gameOver();
+    }
+
     super.onCollision(intersectionPoints, other);
+  }
+
+  void _gameOver() {
+    isDie = true;
+    current = PlayerState.die;
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        if (!isFacingRight) {
+          isFacingRight = true;
+          flipHorizontallyAroundCenter();
+        }
+        velocity.x = 0;
+        position = firstPosition;
+        current = PlayerState.appear;
+
+        Future.delayed(
+          const Duration(milliseconds: 900),
+          () {
+            _updatePlayerState();
+            isDie = false;
+          },
+        );
+      },
+    );
+
+    /*Future.delayed(const Duration(milliseconds: 1000),() {
+      position = firstPosition;
+    },);*/
   }
 }
