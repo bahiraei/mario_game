@@ -4,8 +4,12 @@ class Assets {
 
   static const String assetsTilesMarioGame =
       'assets/tiles/mario_game.tiled-session';
+  static const String audioCastleComplete = 'assets/audio/castle_complete.mp3';
   static const String audioCoin = 'assets/audio/coin.wav';
+  static const String audioGameOver = 'assets/audio/game_over.mp3';
   static const String audioJump = 'assets/audio/jump.wav';
+  static const String audioLevelComplete = 'assets/audio/level_complete.mp3';
+  static const String audioLostALife = 'assets/audio/lost_a_life.mp3';
   static const String imagesJump = 'assets/images/jump.png';
   static const String imagesMariogameTileset =
       'assets/images/mariogame_tileset.PNG';

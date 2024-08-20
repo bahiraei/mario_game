@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
+import 'package:mario_game/components/player.dart';
 import 'package:mario_game/maro_game.dart';
 
-class Trap extends SpriteAnimationComponent with HasGameRef<MarioGame> {
+class Trap extends SpriteAnimationComponent
+    with HasGameRef<MarioGame>, CollisionCallbacks {
   final String name;
   final int rightMargin;
   final int leftMargin;
@@ -25,6 +28,8 @@ class Trap extends SpriteAnimationComponent with HasGameRef<MarioGame> {
 
   double startRange = 0.0;
   double endRange = 0.0;
+
+  bool trapped = false;
 
   @override
   FutureOr<void> onLoad() {
@@ -53,5 +58,14 @@ class Trap extends SpriteAnimationComponent with HasGameRef<MarioGame> {
     }
     position.x += moveSpeed * dt * moveDirection;
     super.update(dt);
+  }
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Player && game.player.isMoveDisabled && !trapped) {
+      trapped = true;
+      FlameAudio.play('lost_a_life.mp3');
+    }
+    super.onCollision(intersectionPoints, other);
   }
 }

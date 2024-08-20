@@ -17,11 +17,12 @@ class MarioGame extends FlameGame
 
   late final JoystickComponent joystickComponent;
 
-  final bool onTouchScreen = false;
+  final bool onTouchScreen = true;
 
   late World world;
 
   int currentLevel = 1;
+  int maxLevel = 2;
 
   @override
   Color backgroundColor() => Colors.white;
@@ -30,7 +31,7 @@ class MarioGame extends FlameGame
   FutureOr<void> onLoad() async {
     //load all images and caching from assets/images folder
     await images.loadAllImages();
-
+    _loadLevel();
     addJoyStickComponents();
 
     return super.onLoad();
@@ -83,6 +84,7 @@ class MarioGame extends FlameGame
   }
 
   void _loadLevel() {
+    // FlameAudio.bgm.play('bg.wav');
     world = Level(
       levelName: 'level_$currentLevel',
       player: player,
@@ -97,7 +99,14 @@ class MarioGame extends FlameGame
     addAll([cam, world]);
   }
 
-  void nextLevel() {
-    ++currentLevel;
+  nextLevel() {
+    removeWhere((component) => component is Level);
+    if (currentLevel < maxLevel) {
+      currentLevel++;
+      _loadLevel();
+    } else {
+      currentLevel = 1;
+      _loadLevel();
+    }
   }
 }

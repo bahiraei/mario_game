@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:mario_game/components/next_level.dart';
 import 'package:mario_game/components/player_hitbox.dart';
 import 'package:mario_game/components/trap.dart';
 import 'package:mario_game/maro_game.dart';
@@ -16,6 +18,7 @@ enum PlayerState {
   idle,
   die,
   appear,
+  disappear,
 }
 
 //with HasGameRef<MaroGame> => یک نمونه از کلاس مربوطه رو برای ما ایجاد می کند
@@ -26,6 +29,7 @@ class Player extends SpriteAnimationGroupComponent
   late final SpriteAnimation jumpAnimation;
   late final SpriteAnimation dieAnimation;
   late final SpriteAnimation appearAnimation;
+  late final SpriteAnimation disappearAnimation;
 
   double moveSpeed = 100;
   int moveDirection = 0;
@@ -34,7 +38,8 @@ class Player extends SpriteAnimationGroupComponent
   bool isPlayerJumped = false;
   bool isPlayerOnGround = false;
   Vector2 firstPosition = Vector2.zero();
-  bool isDie = false;
+  bool isMoveDisabled = false;
+  bool isLevelFinished = false;
   List<ImpedimentBlock> impedimentBlocksList = [];
   PlayerHitBox hitBox = PlayerHitBox(
     width: 23,
@@ -52,6 +57,7 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   FutureOr<void> onLoad() {
+    priority = 1;
     firstPosition = Vector2(position.x, position.y);
     add(
       RectangleHitbox(
@@ -65,7 +71,7 @@ class Player extends SpriteAnimationGroupComponent
 
   @override
   void update(double dt) {
-    if (!isDie) {
+    if (!isMoveDisabled) {
       _updatePlayerState();
       _updatePlayerMoves(dt);
       _checkHorizontalCollision();
@@ -102,6 +108,12 @@ class Player extends SpriteAnimationGroupComponent
       stepTime: .1,
     );
 
+    disappearAnimation = _spriteAnimation(
+      state: 'disappear',
+      amount: 9,
+      stepTime: .1,
+    );
+
     dieAnimation = _spriteAnimation(
       state: 'die',
       amount: 1,
@@ -115,6 +127,7 @@ class Player extends SpriteAnimationGroupComponent
       PlayerState.jump: jumpAnimation,
       PlayerState.appear: appearAnimation,
       PlayerState.die: dieAnimation,
+      PlayerState.disappear: disappearAnimation,
     };
 
     //تنظیم وضعیت فعلی کاراکتر که در چه حالتی شروع به کار کند. اگر قرار نگیرد کاراکتر در صفحه نمایش داده نمی شود.
@@ -141,6 +154,7 @@ class Player extends SpriteAnimationGroupComponent
 
   void _updatePlayerMoves(double dt) {
     if (isPlayerJumped && isPlayerOnGround) {
+      FlameAudio.play('jump.wav');
       const jumpVelocity = -320.0;
       velocity.y = jumpVelocity;
       position.y += velocity.y * dt;
@@ -264,11 +278,15 @@ class Player extends SpriteAnimationGroupComponent
       _gameOver();
     }
 
+    if (other is NextLevel && !isLevelFinished) {
+      _nextLevel();
+    }
+
     super.onCollision(intersectionPoints, other);
   }
 
   void _gameOver() {
-    isDie = true;
+    isMoveDisabled = true;
     current = PlayerState.die;
     Future.delayed(
       const Duration(milliseconds: 500),
@@ -285,7 +303,7 @@ class Player extends SpriteAnimationGroupComponent
           const Duration(milliseconds: 900),
           () {
             _updatePlayerState();
-            isDie = false;
+            isMoveDisabled = false;
           },
         );
       },
@@ -294,5 +312,20 @@ class Player extends SpriteAnimationGroupComponent
     /*Future.delayed(const Duration(milliseconds: 1000),() {
       position = firstPosition;
     },);*/
+  }
+
+  void _nextLevel() {
+    isLevelFinished = true;
+    FlameAudio.play('level_complete.mp3');
+    Future.delayed(const Duration(milliseconds: 500), () {
+      isMoveDisabled = true;
+
+      current = PlayerState.disappear;
+      Future.delayed(const Duration(milliseconds: 900), () {
+        game.nextLevel();
+        isMoveDisabled = false;
+        isLevelFinished = false;
+      });
+    });
   }
 }

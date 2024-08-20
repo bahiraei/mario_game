@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 import '../maro_game.dart';
 
@@ -42,7 +43,7 @@ class CollectedItem extends SpriteAnimationComponent
 
   collisionWithPlayer() {
     if (!collected) {
-      /*FlameAudio.play('coin.wav');*/
+      FlameAudio.play('coin.wav');
       animation = SpriteAnimation.fromFrameData(
         game.images.fromCache('sprites/spark.png'),
         SpriteAnimationData.sequenced(
