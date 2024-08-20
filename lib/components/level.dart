@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:mario_game/components/impediment_block.dart';
+import 'package:mario_game/components/next_level.dart';
 import 'package:mario_game/components/trap.dart';
 
 import 'collected_item.dart';
@@ -65,6 +65,19 @@ class Level extends World {
               size: Vector2(
                 impediment.width,
                 impediment.height,
+              ),
+            ),
+          );
+        case 'next_level':
+          add(
+            NextLevel(
+              size: Vector2(
+                impediment.size.x,
+                impediment.size.y,
+              ),
+              position: Vector2(
+                impediment.x,
+                impediment.y,
               ),
             ),
           );

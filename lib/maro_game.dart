@@ -13,32 +13,23 @@ class MarioGame extends FlameGame
     with HasKeyboardHandlerComponents, DragCallbacks, HasCollisionDetection {
   final player = Player();
 
-  late final CameraComponent cam;
+  late CameraComponent cam;
 
   late final JoystickComponent joystickComponent;
 
   final bool onTouchScreen = false;
+
+  late World world;
+
+  int currentLevel = 1;
 
   @override
   Color backgroundColor() => Colors.white;
 
   @override
   FutureOr<void> onLoad() async {
-    final World world = Level(
-      levelName: 'level_1',
-      player: player,
-    );
-
     //load all images and caching from assets/images folder
     await images.loadAllImages();
-
-    cam = CameraComponent.withFixedResolution(
-      width: 640,
-      height: 368,
-      world: world,
-    );
-    cam.viewfinder.anchor = Anchor.topLeft;
-    addAll([cam, world]);
 
     addJoyStickComponents();
 
@@ -89,5 +80,24 @@ class MarioGame extends FlameGame
       default:
         player.moveDirection = 0;
     }
+  }
+
+  void _loadLevel() {
+    world = Level(
+      levelName: 'level_$currentLevel',
+      player: player,
+    );
+
+    cam = CameraComponent.withFixedResolution(
+      width: 640,
+      height: 368,
+      world: world,
+    );
+    cam.viewfinder.anchor = Anchor.topLeft;
+    addAll([cam, world]);
+  }
+
+  void nextLevel() {
+    ++currentLevel;
   }
 }
