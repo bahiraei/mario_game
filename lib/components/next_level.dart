@@ -20,7 +20,7 @@ class NextLevel extends SpriteAnimationComponent
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = true;
+    debugMode = false;
     add(RectangleHitbox());
     return super.onLoad();
   }

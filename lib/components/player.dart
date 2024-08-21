@@ -4,12 +4,14 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/services.dart';
+import 'package:mario_game/components/level.dart';
 import 'package:mario_game/components/next_level.dart';
 import 'package:mario_game/components/player_hitbox.dart';
 import 'package:mario_game/components/trap.dart';
 import 'package:mario_game/maro_game.dart';
 
 import 'collected_item.dart';
+import 'goomba.dart';
 import 'impediment_block.dart';
 
 enum PlayerState {
@@ -275,7 +277,11 @@ class Player extends SpriteAnimationGroupComponent
     }
 
     if (other is Trap) {
-      _gameOver();
+      gameOver();
+    }
+
+    if (other is Goomba) {
+      other.collisionWithPlayer();
     }
 
     if (other is NextLevel && !isLevelFinished) {
@@ -285,33 +291,22 @@ class Player extends SpriteAnimationGroupComponent
     super.onCollision(intersectionPoints, other);
   }
 
-  void _gameOver() {
+  void gameOver() {
     isMoveDisabled = true;
     current = PlayerState.die;
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () {
-        if (!isFacingRight) {
-          isFacingRight = true;
-          flipHorizontallyAroundCenter();
-        }
-        velocity.x = 0;
-        position = firstPosition;
-        current = PlayerState.appear;
-
-        Future.delayed(
-          const Duration(milliseconds: 900),
-          () {
-            _updatePlayerState();
-            isMoveDisabled = false;
-          },
-        );
-      },
-    );
-
-    /*Future.delayed(const Duration(milliseconds: 1000),() {
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (!isFacingRight) {
+        isFacingRight = true;
+        flipHorizontallyAroundCenter();
+      }
+      velocity = Vector2.zero();
       position = firstPosition;
-    },);*/
+      current = PlayerState.appear;
+      Future.delayed(const Duration(milliseconds: 900), () {
+        _updatePlayerState();
+        isMoveDisabled = false;
+      });
+    });
   }
 
   void _nextLevel() {

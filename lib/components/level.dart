@@ -7,6 +7,7 @@ import 'package:mario_game/components/next_level.dart';
 import 'package:mario_game/components/trap.dart';
 
 import 'collected_item.dart';
+import 'goomba.dart';
 import 'invisible_object.dart';
 import 'player.dart';
 
@@ -38,6 +39,14 @@ class Level extends World {
             actor.position.y,
           );
           add(player);
+        case 'Enemy':
+          final rightMargin = actor.properties.getValue('rightMargin');
+          final leftMargin = actor.properties.getValue('leftMargin');
+          add(Goomba(
+              position: Vector2(actor.x, actor.y),
+              size: Vector2(actor.width, actor.height),
+              leftMargin: leftMargin,
+              rightMargin: rightMargin));
       }
     }
 
